@@ -20,6 +20,7 @@
   import { getData } from '@/services/dataService';
   
   export default {
+    name: 'DataTable',
     data() {
       return {
         headers: [
