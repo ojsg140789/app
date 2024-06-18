@@ -1,19 +1,19 @@
 <template>
   <v-app>
     <v-main>
-      <HelloWorld/>
+      <data-table />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import DataTable from '@/components/organisms/DataTable.vue';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    DataTable,
   },
 
   data: () => ({
