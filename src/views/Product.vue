@@ -1,15 +1,26 @@
 <template>
     <v-container>
-        <form-product />
-        Params {{ id }}
+        <form-product 
+        :id="id"
+        @submit-product="handleProductSubmit" />
     </v-container>
 </template>
 
 <script>
-import FormProduct from '@/components/organisms/FormProduct.vue';
+import FormProduct from '@/components/organisms/FormProduct.vue'
 
 export default {
     name: 'Product',
+    data() {
+        return {
+            submittedProduct: {
+                id: '',
+                name: '',
+                fileName: '',
+                price: ''
+            }
+        };
+    },
     props: {
         id: String
     },
@@ -17,8 +28,12 @@ export default {
         FormProduct,
     },
     created () {
-      console.log(this.id,);
     },
+    methods: {
+        async handleProductSubmit() {
+            this.$router.push({ name: 'Home'});
+        }
+    }
 };
 </script>
 
