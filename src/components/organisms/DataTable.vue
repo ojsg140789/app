@@ -1,4 +1,5 @@
 <template>
+  <v-toolbar-title class="custom-title">Lista de Productos</v-toolbar-title>
   <v-row justify="end">
     <v-col cols="auto">
       <v-btn variant="outlined" @click="goToProductForm()">
@@ -109,4 +110,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.custom-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+</style>

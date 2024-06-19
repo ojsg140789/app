@@ -1,5 +1,6 @@
 <template>
     <v-container>
+        <v-toolbar-title class="custom-title">Producto</v-toolbar-title>
         <form-product 
         :id="id"
         @submit-product="handleProductSubmit" />
@@ -37,4 +38,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.custom-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+</style>
