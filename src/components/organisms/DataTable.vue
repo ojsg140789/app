@@ -5,8 +5,16 @@
         Agregar Producto
       </v-btn>
     </v-col>
+    <v-col cols="auto">
+      <v-btn variant="outlined" @click="exportToExcel()">
+        Exportar
+      </v-btn>
+    </v-col>
   </v-row>
   <v-data-table :headers="headers" :items="items">
+    <template v-slot:[`item.price`]="{ item }">
+      ${{ item.price }}
+    </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon class="me-2" size="small" @click="goToProductForm(item.id)">
         mdi-pencil
@@ -19,6 +27,8 @@
 </template>
 
 <script>
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import dataService from '@/services/dataService';
 
 export default {
@@ -56,6 +66,44 @@ export default {
       } catch (error) {
         console.error('Error loading data', error);
       }
+    },
+    exportToExcel() {
+      const worksheet = XLSX.utils.json_to_sheet(this.items);
+
+      XLSX.utils.sheet_add_aoa(worksheet, [['ID', 'Name', 'Price', 'FileName']], { origin: 'A1' });
+
+      worksheet['!cols'] = [
+        { wpx: 200 },
+        { wpx: 300 },
+        { wpx: 300 },
+        { wpx: 300 } 
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Reporte');
+
+      const range = XLSX.utils.decode_range(worksheet['!ref']);
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+          const cellAddress = XLSX.utils.encode_cell({ c: C, r: R });
+          if (!worksheet[cellAddress]) continue;
+          worksheet[cellAddress].s = {
+            font: { name: "Arial", sz: 12, bold: R === 0, color: { rgb: R === 0 ? "FFFFFF" : "000000" } },
+            fill: { fgColor: { rgb: R === 0 ? "4F81BD" : "FFFFFF" } },
+            border: {
+              top: { style: "thin", color: { rgb: "000000" } },
+              bottom: { style: "thin", color: { rgb: "000000" } },
+              left: { style: "thin", color: { rgb: "000000" } },
+              right: { style: "thin", color: { rgb: "000000" } }
+            },
+            alignment: { horizontal: "center", vertical: "center" }
+          };
+        }
+      }
+
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+      saveAs(data, 'reporte.xlsx');
     },
   }
 };

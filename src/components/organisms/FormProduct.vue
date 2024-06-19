@@ -1,7 +1,7 @@
 <template>
     <v-form @submit.prevent="submitForm" class="ma-4">
         <v-text-field v-model="localProduct.name" label="Nombre" required />
-        <v-text-field v-model="localProduct.price" label="Precio" type="number" required />
+        <v-text-field v-model="localProduct.price" label="Precio" type="number" required prepend-icon="mdi-currency-usd" />
         <v-btn type="submit" color="primary">Guardar</v-btn>
     </v-form>
     <template v-if="localProduct.id && localProduct.fileName">
