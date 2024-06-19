@@ -3,17 +3,49 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5021/api/Products';
 const API_KEY = 'YourSecureApiKeyHere';
 
-export const getData = async () => {
-  try {
-    const response = await axios.get(API_URL, {
+export default {
+  getAll() {
+    return axios.get(`${API_URL}`,{
       headers: {
         'X-API-KEY': `${API_KEY}`,
         'Content-Type': 'application/json'
       }
     });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching data', error);
-    throw error;
+  },
+
+  get(id) {
+    return axios.get(`${API_URL}/${id}`,{
+      headers: {
+        'X-API-KEY': `${API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  },
+
+  create(data) {
+    return axios.post(`${API_URL}`,{
+      headers: {
+        'X-API-KEY': `${API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    }, data);
+  },
+
+  update(id, data) {
+    return axios.put(`${API_URL}/${id}`,{
+      headers: {
+        'X-API-KEY': `${API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    }, data);
+  },
+
+  delete(id) {
+    return axios.delete(`${API_URL}/${id}`,{
+      headers: {
+        'X-API-KEY': `${API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
   }
 };

@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <form-product />
-        Params {{ productId }}
+        Params {{ id }}
     </v-container>
 </template>
 
@@ -10,13 +10,14 @@ import FormProduct from '@/components/organisms/FormProduct.vue';
 
 export default {
     name: 'Product',
-    computed: {
-    productId() {
-            return this.$route.params.id;
-        }
+    props: {
+        id: String
     },
     components: {
         FormProduct,
+    },
+    created () {
+      console.log(this.id,);
     },
 };
 </script>

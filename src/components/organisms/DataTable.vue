@@ -1,46 +1,64 @@
 <template>
-    <v-card>
-      <v-card-title>Productos</v-card-title>
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        class="elevation-1"
-      >
-        <template v-slot:top>
-          <v-toolbar flat>
-            <v-toolbar-title>Lista</v-toolbar-title>
-            <v-divider class="mx-4" inset vertical></v-divider>
-          </v-toolbar>
-        </template>
-      </v-data-table>
-    </v-card>
-  </template>
-  
-  <script>
-  import { getData } from '@/services/dataService';
-  
-  export default {
-    name: 'DataTable',
-    data() {
-      return {
-        headers: [
-          { text: 'Name', value: 'name' },
-          { text: 'Price', value: 'price' },
-          { text: 'FileName', value: 'fileName' },
-        ],
-        items: [],
-      };
-    },
-    async created() {
+  <v-row justify="end">
+    <v-col cols="auto">
+      <v-btn variant="outlined" @click="goToProductForm()">
+        Agregar Producto
+      </v-btn>
+    </v-col>
+  </v-row>
+  <v-data-table :headers="headers" :items="items">
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon class="me-2" size="small" @click="goToProductForm(item.id)">
+        mdi-pencil
+      </v-icon>
+      <v-icon size="small" @click="deleteItem(item.id)">
+        mdi-delete
+      </v-icon>
+    </template>
+  </v-data-table>
+</template>
+
+<script>
+import dataService from '@/services/dataService';
+
+export default {
+  name: 'DataTable',
+  data() {
+    return {
+      headers: [
+        { title: 'Name', key: 'name' },
+        { title: 'Price', key: 'price' },
+        { title: 'FileName', key: 'fileName' },
+        { title: 'Actions', key: 'actions', sortable: false },
+      ],
+      items: [],
+    };
+  },
+  async created() {
+    this.getAll();
+  },
+  methods: {
+    async getAll() {
       try {
-        this.items = await getData();
+        let _items = await dataService.getAll();
+        this.items = _items.data;
       } catch (error) {
         console.error('Error loading data', error);
       }
     },
-  };
-  </script>
-  
-  <style scoped>
-  </style>
-  
+    async goToProductForm(id) {
+      this.$router.push({ name: 'Product', params: { id: id } });
+    },
+    async deleteItem(id) {
+      try {
+        await dataService.delete(id);
+        this.getAll();
+      } catch (error) {
+        console.error('Error loading data', error);
+      }
+    },
+  }
+};
+</script>
+
+<style scoped></style>
