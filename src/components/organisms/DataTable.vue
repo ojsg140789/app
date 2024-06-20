@@ -2,6 +2,11 @@
   <v-toolbar-title class="custom-title">Lista de Productos</v-toolbar-title>
   <v-row justify="end">
     <v-col cols="auto">
+      <v-btn variant="outlined" to="/tree">
+        Ir a Componente Estructura Árbol
+      </v-btn>
+    </v-col>
+    <v-col cols="auto">
       <v-btn variant="outlined" @click="goToProductForm()">
         Agregar Producto
       </v-btn>
