@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import dataService from '@/services/dataService';
@@ -59,19 +60,40 @@ export default {
         let _items = await dataService.getAll();
         this.items = _items.data;
       } catch (error) {
-        console.error('Error loading data', error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un problema al obtener los datos"
+        });
       }
     },
     async goToProductForm(id) {
       this.$router.push({ name: 'Product', params: { id: id } });
     },
     async deleteItem(id) {
-      try {
-        await dataService.delete(id);
-        this.getAll();
-      } catch (error) {
-        console.error('Error loading data', error);
-      }
+      Swal.fire({
+        title: "Eliminar",
+        text: "¿Eliminar producto?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar"
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await dataService.delete(id);
+            this.getAll();
+          } catch (error) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Ocurrió un problema al eliminar el producto"
+            });
+          }
+        }
+      });
     },
     exportToExcel() {
       const worksheet = XLSX.utils.json_to_sheet(this.items);
@@ -82,7 +104,7 @@ export default {
         { wpx: 200 },
         { wpx: 300 },
         { wpx: 300 },
-        { wpx: 300 } 
+        { wpx: 300 }
       ];
 
       const workbook = XLSX.utils.book_new();
